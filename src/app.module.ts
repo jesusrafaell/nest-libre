@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
+import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import RepoModule from './repo.module';
-//
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join, resolve } from 'path';
-import { GraphQLModule } from '@nestjs/graphql';
+import { AuthModule } from './auth/auth.module';
+import Usuarios from './db/models/usuarios.entity';
 
 @Module({
   imports: [
@@ -23,10 +20,12 @@ import { GraphQLModule } from '@nestjs/graphql';
       extra: {
         trustServerCertificate: true,
       },
+      //
+      entities: [Usuarios],
     }),
-    RepoModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  //controllers: [AppController],
+  //providers: [AppService],
 })
 export class AppModule {}
