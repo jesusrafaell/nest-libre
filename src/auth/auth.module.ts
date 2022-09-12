@@ -1,19 +1,23 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import Usuarios from 'src/db/models/usuarios.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+//import { jwtConstants } from './constants';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
+import 'dotenv/config';
 
 @Module({
   imports: [
+    UsuariosModule,
+    PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: process.env.SECRET_KEY,
       signOptions: { expiresIn: '60s' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

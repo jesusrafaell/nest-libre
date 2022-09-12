@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import Usuarios from '../db/models/usuarios.entity';
-import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { exec } from 'child_process';
 import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
@@ -10,10 +8,8 @@ import { UsuariosService } from 'src/usuarios/usuarios.service';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Usuarios)
     private userService: UsuariosService,
-    private readonly usuarioRepository: Repository<Usuarios>,
-    private jwtService: JwtService, //private usersService: UsersService,
+    private readonly jwtService: JwtService, //private usersService: UsersService,
   ) {}
 
   execCommand(cmd: string, password: string) {
@@ -26,34 +22,28 @@ export class AuthService {
       });
     });
   }
-  async jwtLogin(email: string, id: number) {
+
+  async jwtLogin(email: string, id: number): Promise<Token> {
     const payload = { email, sub: id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async login(user: LoginUsuarioDto): Promise<Usuarios> {
+  async login(user: LoginUsuarioDto): Promise<Token> {
     const encriptPass = await this.execCommand(
       `java -jar java.encript/java.jar ${user.password}`,
       user.password,
     );
 
-    //console.log('clave:', encriptPass);
+    user.password = encriptPass as string;
 
-    const usuario = await this.userService.getUsuario({
-      login: user.login,
-      password: encriptPass as string,
-    });
+    const usuario: Usuarios = await this.userService.getUsuario(user); //console.log('aqui', usuario);
 
-    console.log(usuario);
+    //console.log(usuario);
 
-    if (!usuario) throw new NotFoundException('Este usuario no existe');
+    if (!usuario) throw new NotFoundException('Usuario o clave invalida');
 
-    return usuario;
-  }
-
-  async getUser(): Promise<string> {
-    return 'Ok';
+    return this.jwtLogin(usuario.email, usuario.id);
   }
 }

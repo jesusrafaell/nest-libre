@@ -6,21 +6,17 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { AuthService } from './auth.service';
 
 @UsePipes(ValidationPipe)
-@Controller('auth')
+@Controller()
+//@Controller('auth')
 export class AuthController {
   constructor(private readonly UsuariosService: AuthService) {}
 
-  @Post()
-  login(@Body() login: LoginUsuarioDto) {
+  @Post('auth/login')
+  login(@Body() login: LoginUsuarioDto): Promise<Token> {
     return this.UsuariosService.login(login);
-  }
-
-  @Get()
-  get() {
-    return this.UsuariosService.getUser();
   }
 }

@@ -10,3 +10,7 @@ export class LoginUsuarioDto {
   @Length(7, 20)
   password!: string;
 }
+
+export class Token {
+  access_token: string;
+}

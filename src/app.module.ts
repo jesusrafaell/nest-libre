@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join, resolve } from 'path';
 import { AuthModule } from './auth/auth.module';
 import Usuarios from './db/models/usuarios.entity';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import Usuarios from './db/models/usuarios.entity';
       entities: [Usuarios],
     }),
     AuthModule,
+    UsuariosModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
