@@ -14,7 +14,7 @@ import 'dotenv/config';
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '4h' },
     }),
   ],
   controllers: [AuthController],

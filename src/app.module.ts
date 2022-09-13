@@ -3,7 +3,15 @@ import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join, resolve } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { CommerceModule } from './commerce/commerce.module';
+import Abonos from './db/models/abono.entity';
+import Comercios from './db/models/comercios.entity';
+import ComerciosXafiliado from './db/models/comerciosXafliado.entity';
+import ComisionesMilPagos from './db/models/comisionesmilpagos.entity';
+import Contactos from './db/models/contactos.entity';
+import Perfiles from './db/models/perfiles.entity';
 import Usuarios from './db/models/usuarios.entity';
+import { TerminalsModule } from './terminals/terminals.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
@@ -22,10 +30,19 @@ import { UsuariosModule } from './usuarios/usuarios.module';
         trustServerCertificate: true,
       },
       //
-      entities: [Usuarios],
+      entities: [
+        Usuarios,
+        Perfiles,
+        Comercios,
+        Contactos,
+        ComisionesMilPagos,
+        ComerciosXafiliado,
+        Abonos,
+      ],
     }),
     AuthModule,
-    UsuariosModule,
+    CommerceModule,
+    TerminalsModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],

@@ -2,15 +2,15 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
-  JoinColumn,
+  //OneToMany,
+  //JoinColumn,
 } from 'typeorm';
 //import general_logs from './general_logs';
 
 @Entity({ synchronize: false })
 export default class Usuarios {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id?: number;
 
   @Column({ nullable: false })
   login!: string;

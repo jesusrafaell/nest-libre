@@ -12,8 +12,9 @@ export class AuthService {
     private readonly jwtService: JwtService, //private usersService: UsersService,
   ) {}
 
-  execCommand(cmd: string, password: string) {
-    return new Promise((resolve, reject) => {
+  execCommand(password: string) {
+    const cmd = `java -jar java.encript/java.jar ${password}`;
+    return new Promise((resolve) => {
       exec(cmd, (error, stdout, stderr) => {
         if (error) {
           console.warn(error);
@@ -31,10 +32,7 @@ export class AuthService {
   }
 
   async login(user: LoginUsuarioDto): Promise<Token> {
-    const encriptPass = await this.execCommand(
-      `java -jar java.encript/java.jar ${user.password}`,
-      user.password,
-    );
+    const encriptPass = await this.execCommand(user.password);
 
     user.password = encriptPass as string;
 
@@ -43,6 +41,14 @@ export class AuthService {
     //console.log(usuario);
 
     if (!usuario) throw new NotFoundException('Usuario o clave invalida');
+
+    const validPerfil = await this.userService.validatePerfil(usuario);
+
+    if (validPerfil) {
+      throw new NotFoundException(
+        'Este Usuario no tiene el perfil para usar la API',
+      );
+    }
 
     return this.jwtLogin(usuario.email, usuario.id);
   }

@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Request,
   Body,
   UsePipes,
   ValidationPipe,
@@ -21,12 +20,5 @@ export class UsuariosController {
   @Get()
   getUsuario(@Body() login: LoginUsuarioDto) {
     return this.UsuariosService.getUsuario(login);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('d')
-  getUsuarios() {
-    console.log('get usuarios');
-    return this.UsuariosService.getUsuarios();
   }
 }

@@ -1,40 +1,37 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Usuarios from '../db/models/usuarios.entity';
 import { LoginUsuarioDto } from './dto/login-usuario.dto';
-import { exec } from 'child_process';
-import { JwtService } from '@nestjs/jwt';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import Perfiles from 'src/db/models/perfiles.entity';
+import Usuarios from 'src/db/models/usuarios.entity';
+import 'dotenv/config';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectRepository(Usuarios)
-    private readonly usuarioRepository: Repository<Usuarios>,
+    private readonly _usuarioRepository: Repository<Usuarios>,
+    @InjectRepository(Perfiles)
+    private readonly _perfilesRepository: Repository<Perfiles>,
   ) {}
 
   async getUsuario(user: LoginUsuarioDto): Promise<Usuarios> {
-    const { login, password } = user;
-    const usuarioExist = await this.usuarioRepository.findOne({
-      where: { login, contrasena: password },
+    return await this._usuarioRepository.findOne({
+      where: { login: user.login, contrasena: user.password },
     });
-
-    if (!usuarioExist) throw new NotFoundException('Este usuario no existe');
-
-    return usuarioExist;
   }
 
-  async getUsuarios(): Promise<Usuarios[]> {
-    try {
-      console.log('hola');
-      const usuarios = await this.usuarioRepository.find();
+  async validatePerfil(user: Usuarios): Promise<boolean> {
+    const perfil = await this._perfilesRepository.findOneById(user.perfilId);
 
-      if (!usuarios.length) throw new NotFoundException('No existen usuarios');
+    if (!perfil) return false;
 
-      return usuarios;
-    } catch (e) {
-      console.log(e);
-      return e;
+    if (
+      user.perfilId !== Number(process.env.PERFIL_ACCESS) &&
+      perfil.nombre !== 'api'
+    ) {
+      return true;
     }
+    return false;
   }
 }

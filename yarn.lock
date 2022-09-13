@@ -1218,6 +1218,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/luxon@^3.0.1":
+  "integrity" "sha512-/LAvk1cMOJt0ghzMFrZEvByUhsiEfeeT2IF53Le+Ki3A538yEL9pRZ7a6MuCxdrYK+YNqNIDmrKU/r2nnw04zQ=="
+  "resolved" "https://registry.npmjs.org/@types/luxon/-/luxon-3.0.1.tgz"
+  "version" "3.0.1"
+
 "@types/mime@*":
   "integrity" "sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA=="
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-3.0.1.tgz"
@@ -4413,6 +4418,11 @@
   "integrity" "sha512-WpibWJ60c3AgAz8a2iYErDrcT2C7OmKnsWhIcHOjkUHFjkXncJhtLxNSqUmxRxRunpb5I8Vprd7aNSd2NtksJQ=="
   "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-2.7.3.tgz"
   "version" "2.7.3"
+
+"luxon@^3.0.3":
+  "integrity" "sha512-+EfHWnF+UT7GgTnq5zXg3ldnTKL2zdv7QJgsU5bjjpbH17E3qi/puMhQyJVYuCq+FRkogvB5WB6iVvUr+E4a7w=="
+  "resolved" "https://registry.npmjs.org/luxon/-/luxon-3.0.3.tgz"
+  "version" "3.0.3"
 
 "macos-release@^2.5.0":
   "integrity" "sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g=="
