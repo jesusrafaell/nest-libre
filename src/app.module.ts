@@ -14,24 +14,39 @@ import Contactos from './db/models/contactos.entity';
 import Perfiles from './db/models/perfiles.entity';
 import Usuarios from './db/models/usuarios.entity';
 import { TerminalsModule } from './terminals/terminals.module';
-import { UsuariosModule } from './usuarios/usuarios.module';
+import 'dotenv/config';
+
+const defaultOptions = {
+  type: 'mssql',
+  database: process.env.DB_DATA,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  options: {
+    encrypt: true,
+  },
+  extra: {
+    trustServerCertificate: true,
+  },
+};
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      host: '10.198.72.11',
-      port: 1433,
-      username: 'amendoza',
-      password: 'Am1523246.',
-      database: 'librepago',
       type: 'mssql',
+      host: process.env.DB_HOST,
+      database: process.env.DB_DATA,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+
       options: {
         encrypt: true,
       },
       extra: {
         trustServerCertificate: true,
       },
-      //
+      //entities: [join(__dirname, '**', '*.entity.{js,ts}')],
       entities: [
         Usuarios,
         Perfiles,
@@ -48,7 +63,5 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     CommerceModule,
     TerminalsModule,
   ],
-  //controllers: [AppController],
-  //providers: [AppService],
 })
 export class AppModule {}

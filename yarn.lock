@@ -1228,10 +1228,10 @@
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-3.0.1.tgz"
   "version" "3.0.1"
 
-"@types/node@*", "@types/node@^16.0.0":
-  "integrity" "sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.11.58.tgz"
-  "version" "16.11.58"
+"@types/node@*", "@types/node@^16.11.59":
+  "integrity" "sha512-6u+36Dj3aDzhfBVUf/mfmc92OEdzQ2kx2jcXGdigfl70E/neV21ZHE6UCz4MDzTRcVqGAM27fk+DLXvyDsn3Jw=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.11.59.tgz"
+  "version" "16.11.59"
 
 "@types/parse-json@^4.0.0":
   "integrity" "sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA=="

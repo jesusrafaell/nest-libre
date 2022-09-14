@@ -6,9 +6,9 @@ import { Connection } from 'typeorm';
 import { AbonoService } from 'src/abono/abono.service';
 import formatTerminals from 'src/utils/formatTerminals';
 
-interface Resp {
-  message?: string;
-  terminales?: any[];
+export interface RespTerm {
+  message: string;
+  terminales?: string[];
   code?: number;
 }
 
@@ -24,7 +24,7 @@ export class TerminalsService {
   async createTerminals(
     comerRif: string,
     comerCantPost: number,
-  ): Promise<Resp> {
+  ): Promise<RespTerm> {
     console.log(comerRif, comerCantPost);
     //validar si exsite el comercio
     const commerce = await this.commerceService.getCommerce(comerRif);
@@ -60,7 +60,7 @@ export class TerminalsService {
 			@UsuarioResponsable = 'API Librepago'`,
     );
 
-    let info: Resp = {
+    let info: RespTerm = {
       message: '',
     };
 
@@ -74,7 +74,7 @@ export class TerminalsService {
       console.log('termianles', nroTerminals);
       //
       const abono = await this.abonoService.createAbono(
-        responseSP,
+        nroTerminals,
         commerce,
         afiliado.cxaCodAfi,
       );

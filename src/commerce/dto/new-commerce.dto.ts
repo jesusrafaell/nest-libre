@@ -13,6 +13,8 @@ import {
 } from '@nestjs/class-validator';
 import { Type } from 'class-transformer';
 import {
+  Max,
+  Min,
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -23,14 +25,22 @@ import error from './messages-validator';
 export class RifValidation implements ValidatorConstraintInterface {
   validate(text: string, args: ValidationArguments) {
     const numeros = '0123456789';
-    if (numeros.indexOf(text[0]) != -1) {
-      return false; // for async validations you must return a Promise<boolean> here
-    }
-    return true;
+    return !(numeros.indexOf(text[0]) != -1);
   }
 
   defaultMessage() {
     return '$property debe comenzar con una letra Ej:V,J,R';
+  }
+}
+
+@ValidatorConstraint({ name: 'customRange', async: false })
+export class SizeOneOrTwo implements ValidatorConstraintInterface {
+  validate(num: number, args: ValidationArguments) {
+    return num == 1 || num == 2;
+  }
+
+  defaultMessage() {
+    return '$property esta fuera de rango debe ser 1 o 2';
   }
 }
 
@@ -105,18 +115,18 @@ class CommerceData {
   @IsNotEmpty()
   comerDesc: string;
   @IsNumber()
+  @IsNotEmpty(error.textNotEmpty)
+  @Validate(SizeOneOrTwo)
   comerTipoPer: number;
   @Length(4, 4, error.cuentaBanco)
   comerCodigoBanco: string;
   @Length(20, 20, error.cuentaBanco)
   comerCuentaBanco: string;
   @IsNumber()
+  @Validate(SizeOneOrTwo)
   comerCodTipoCont: number;
-  @IsNumber()
-  comerTipoPos: number;
-  comerObservaciones: string;
-  comerCodAliado: string;
-  comerPuntoAdicional: number;
+  comerObservaciones?: string;
+  comerPuntoAdicional?: number;
   //
   @IsString()
   @Length(4, 4, error.cuentaBanco)
@@ -135,21 +145,24 @@ class CommerceData {
   @IsOptional()
   comerCuentaBanco3?: string;
   //
-  @IsNotEmptyObject()
   @ValidateNested()
+  @IsObject(error.isObject)
+  @IsNotEmptyObject({ nullable: false }, error.isDefined)
   @Type(() => LocationDTO)
   locationCommerce!: LocationDTO;
-  @IsNotEmptyObject()
   @ValidateNested()
+  @IsObject(error.isObject)
+  @IsNotEmptyObject({ nullable: false }, error.isDefined)
   @Type(() => LocationDTO)
   locationContact!: LocationDTO;
-  @IsNotEmptyObject()
   @ValidateNested()
+  @IsObject(error.isObject)
+  @IsNotEmptyObject({ nullable: false }, error.isDefined)
   @Type(() => LocationDTO)
   locationPos!: LocationDTO;
-  @IsNotEmptyObject()
-  @ValidateNested()
+  @IsNotEmptyObject({ nullable: false }, error.isDefined)
   @Type(() => Days)
+  @ValidateNested()
   daysOperacion: Days;
 }
 

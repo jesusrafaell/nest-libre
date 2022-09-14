@@ -1,0 +1,25 @@
+export default {
+  type: 'mssql',
+  database: process.env.DB_DATA,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  options: {
+    encrypt: true,
+    trustServerCertificate: true,
+  },
+  requestTimeout: 30000000,
+  connectionTimeout: 30000,
+  synchronize: false,
+  migrationsRun: false,
+  logging: false,
+  entities: ['src/db/models/**/*{.js.ts}'],
+  migrations: ['src/db/base/**/*{.js.ts}'],
+  subscribers: ['src/db/subscriber/**/*{.js.ts}'],
+  cli: {
+    entitiesDir: 'src/db/models',
+    migrationsDir: 'src/db/base',
+    subscribersDir: 'src/db/subscriber',
+  },
+};
