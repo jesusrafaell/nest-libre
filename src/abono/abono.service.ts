@@ -19,7 +19,7 @@ export class AbonoService {
     terminals: any[],
     commerce: Comercios,
     cxaCodAfi: string,
-  ): Promise<Resp> {
+  ): Promise<boolean> {
     try {
       const abono: Abonos[] = terminals.map((terminal: any) => ({
         aboTerminal: terminal,
@@ -32,14 +32,11 @@ export class AbonoService {
       }));
 
       await this._abonoRepository.save(abono);
-
-      const info = {
-        message: 'abono',
-      };
-
-      return info;
     } catch (e) {
-      throw new NotFoundException('Error al crear abonos');
+      console.log('Abono error:', e);
+      return false;
     }
+
+    return true;
   }
 }

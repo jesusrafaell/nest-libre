@@ -7,7 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateTerminalsDto } from './dto/login-usuario.dto';
+import { CreateTerminalsDto } from './dto/create-terminals.dto';
 import { TerminalsService } from './terminals.service';
 
 @UsePipes(ValidationPipe)

@@ -1,13 +1,15 @@
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, getConnection, Repository } from 'typeorm';
 import { CommerceDto } from './dto/new-commerce.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { daysToString, locationToString } from 'src/utils/formatString';
 import Comercios from 'src/db/models/comercios.entity';
 import Contactos from 'src/db/models/contactos.entity';
 import ComerciosXafiliado from 'src/db/models/comerciosXafliado.entity';
 import ComisionesMilPagos from 'src/db/models/comisionesmilpagos.entity';
+import CategoriasXafiliado from 'src/db/models/categoriasXafiliado.entity';
+import Afiliados from 'src/db/models/afiliados.entity';
 
 export interface Resp {
   message?: string;
@@ -30,14 +32,59 @@ export class CommerceService {
     //
     @InjectRepository(ComisionesMilPagos)
     private readonly _comisionesMilPagos: Repository<ComisionesMilPagos>,
+    //
+    @InjectRepository(CategoriasXafiliado)
+    private readonly _categoriasXafiliado: Repository<CategoriasXafiliado>,
+    //
+    @InjectRepository(Afiliados)
+    private readonly _afiliadosRepository: Repository<Afiliados>,
   ) {}
+
+  async getCategoriaByAfiliado(
+    catCodAfi: string,
+  ): Promise<CategoriasXafiliado> {
+    return this._categoriasXafiliado.findOne({
+      where: { catCodAfi },
+    });
+  }
+
+  async getCommerce(comerRif: string): Promise<Comercios> {
+    return this._commerceRepository.findOne({
+      where: { comerRif },
+    });
+  }
 
   async createCommerce(body: CommerceDto): Promise<Resp> {
     const { commerce, contacto } = body;
 
+    //validar si el comercio existe
+    if (await this.getCommerce(commerce.comerRif)) {
+      throw new BadRequestException(
+        `Comercio [${commerce.comerRif}] ya existe`,
+      );
+    }
+
     //Validar si el afiliado existe y es de librepago
-    /*
-     */
+    // const cxaCodAfi = `${commerce.idActivityXAfiliado}`.split('');
+    // while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');
+    // const cxaCod: string = cxaCodAfi.join('');
+    const { idActivityXAfiliado: cxaCod } = commerce;
+    console.log('numero de afiliado', cxaCod);
+
+    //[3312] MOdifcar el afilaido apra que busque en mi tabla
+    const afiliado = await this._afiliadosRepository.findOneById(cxaCod);
+
+    if (!afiliado)
+      throw new BadRequestException(
+        `No existe el numero de afiliado [${cxaCod}]`,
+      );
+
+    const categoria = await this.getCategoriaByAfiliado(afiliado.afiCod);
+
+    if (!categoria)
+      throw new BadRequestException(
+        `No existe categoria comercial del afiliado [${afiliado.afiCod}]`,
+      );
 
     const newCommerce: Comercios = {
       comerDesc: commerce.comerDesc,
@@ -53,7 +100,7 @@ export class CommerceService {
       comerInicioContrato: DateTime.local().toISODate(),
       comerFinContrato: DateTime.local().plus({ years: 1 }).toISODate(),
       comerExcluirPago: 0,
-      comerCodCategoria: 5411,
+      comerCodCategoria: Number(categoria.catCodCat),
       comerGarantiaFianza: 1,
       comerModalidadGarantia: 1,
       comerMontoGarFian: 7.77,
@@ -78,76 +125,67 @@ export class CommerceService {
       comerFechaGarFian: null,
     };
 
-    console.log(newCommerce);
+    const comercioSave = await this._commerceRepository.save(newCommerce);
+    console.log('listo comercio');
+    //Contacto
+    const newContacto: Contactos = {
+      contCodComer: comercioSave!.comerCod,
+      contNombres: contacto.contNombres,
+      contApellidos: contacto.contApellidos,
+      contTelefLoc: contacto.contTelefLoc,
+      contTelefMov: contacto.contTelefLoc,
+      contMail: contacto.contMail,
+      contCodUsuario: null,
+      contFreg: null,
+    };
 
-    let comercioSave: Comercios | undefined =
-      await this._commerceRepository.findOne({
-        where: { comerRif: commerce.comerRif },
+    await this._contactosRepositoy.save(newContacto);
+    console.log('listo contacto');
+
+    //Crear comerxafiliado
+    let comerXafiSave = await this._comerciosXAfiliado.findOne({
+      where: { cxaCodComer: comercioSave!.comerCod },
+    });
+
+    if (!comerXafiSave) {
+      comerXafiSave = await this._comerciosXAfiliado.save({
+        cxaCodAfi: cxaCod,
+        cxaCodComer: comercioSave!.comerCod,
       });
+      console.log('listo comercioxafilido');
+    } else {
+      console.log('ComercioXafiliado ya existe', comercioSave?.comerCod);
+    }
 
-    if (!comercioSave) {
-      comercioSave = await this._commerceRepository.save(newCommerce);
-      console.log('listo comercio');
-      //Contacto
-      const newContacto: Contactos = {
-        contCodComer: comercioSave!.comerCod,
-        contNombres: contacto.contNombres,
-        contApellidos: contacto.contApellidos,
-        contTelefLoc: contacto.contTelefLoc,
-        contTelefMov: contacto.contTelefLoc,
-        contMail: contacto.contMail,
-        contCodUsuario: null,
-        contFreg: null,
-      };
+    //Crear Comision
+    let comisionSave = await this._comisionesMilPagos.findOne({
+      where: { cmCodComercio: comercioSave!.comerCod },
+    });
 
-      await this._contactosRepositoy.save(newContacto);
-      console.log('listo contacto');
+    console.log('existe comision', comisionSave);
 
-      const cxaCodAfi = `${commerce.idActivityXAfiliado}`.split('');
-      while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');
-      const cxaCod: string = cxaCodAfi.join('');
-
-      //Crear comerxafiliado
-      let comerXafiSave = await this._comerciosXAfiliado.findOne({
-        where: { cxaCodComer: comercioSave!.comerCod },
-      });
-
-      if (!comerXafiSave) {
-        comerXafiSave = await this._comerciosXAfiliado.save({
-          cxaCodAfi: cxaCod,
-          cxaCodComer: comercioSave!.comerCod,
-        });
-        console.log('listo comercioxafilido');
-      } else {
-        console.log('ComercioXafiliado ya existe', comercioSave?.comerCod);
-      }
-
-      //Crear Comision
-      let comisionSave = await this._comisionesMilPagos.findOne({
-        where: { cmCodComercio: comercioSave!.comerCod },
-      });
-
-      console.log('existe comision', comisionSave);
-
-      if (!comisionSave) {
-        this.connection.query(`
+    if (!comisionSave) {
+      this.connection.query(`
 						INSERT INTO [dbo].[ComisionesMilPagos]
 							([cmCodComercio] ,[cmPorcentaje])
 						VALUES (${comercioSave?.comerCod} ,0)				
         `);
-      }
-
-      console.log('listo comisionmilpagos');
-    } else {
-      throw new NotFoundException(
-        `El comercio ${commerce.comerRif} ya se encuentra registrado`,
-      );
     }
 
+    console.log('listo comisionmilpagos');
+
     const info = {
-      message: `Comerico ${commerce.comerRif} creado con exito`,
+      message: `Comerico [${commerce.comerRif}] creado con exito`,
     };
 
     return info;
+  }
+
+  async getAfiliadoByCommerce(
+    cxaCodComer: number,
+  ): Promise<ComerciosXafiliado> {
+    return this._comerciosXAfiliado.findOne({
+      where: { cxaCodComer },
+    });
   }
 }

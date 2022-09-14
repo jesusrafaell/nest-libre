@@ -5,6 +5,8 @@ import { join, resolve } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { CommerceModule } from './commerce/commerce.module';
 import Abonos from './db/models/abono.entity';
+import Afiliados from './db/models/afiliados.entity';
+import CategoriasXafiliado from './db/models/categoriasXafiliado.entity';
 import Comercios from './db/models/comercios.entity';
 import ComerciosXafiliado from './db/models/comerciosXafliado.entity';
 import ComisionesMilPagos from './db/models/comisionesmilpagos.entity';
@@ -38,6 +40,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
         ComisionesMilPagos,
         ComerciosXafiliado,
         Abonos,
+        CategoriasXafiliado,
+        Afiliados,
       ],
     }),
     AuthModule,

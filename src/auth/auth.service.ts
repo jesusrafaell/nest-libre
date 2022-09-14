@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import Usuarios from '../db/models/usuarios.entity';
 import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { exec } from 'child_process';
@@ -40,12 +44,12 @@ export class AuthService {
 
     //console.log(usuario);
 
-    if (!usuario) throw new NotFoundException('Usuario o clave invalida');
+    if (!usuario) throw new UnauthorizedException('Usuario o clave invalida');
 
     const validPerfil = await this.userService.validatePerfil(usuario);
 
     if (validPerfil) {
-      throw new NotFoundException(
+      throw new UnauthorizedException(
         'Este Usuario no tiene el perfil para usar la API',
       );
     }
