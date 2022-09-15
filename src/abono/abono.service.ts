@@ -1,5 +1,5 @@
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import Abonos from 'src/db/models/abono.entity';
 import Comercios from 'src/db/models/comercios.entity';
@@ -14,10 +14,6 @@ export interface RespAbono {
 @Injectable()
 export class AbonoService {
   constructor(
-    @InjectConnection()
-    private readonly _userRepo: Connection,
-
-    //
     @InjectRepository(Abonos)
     private readonly _abonoRepository: Repository<Abonos>,
   ) {}

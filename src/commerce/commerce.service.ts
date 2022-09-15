@@ -128,7 +128,7 @@ export class CommerceService {
     console.log('listo comercio');
     //Contacto
     const newContacto: Contactos = {
-      contCodComer: comercioSave!.comerCod,
+      contCodComer: comercioSave.comerCod,
       contNombres: contacto.contNombres,
       contApellidos: contacto.contApellidos,
       contTelefLoc: contacto.contTelefLoc,
@@ -143,13 +143,13 @@ export class CommerceService {
 
     //Crear comerxafiliado
     let comerXafiSave = await this._comerciosXAfiliado.findOne({
-      where: { cxaCodComer: comercioSave!.comerCod },
+      where: { cxaCodComer: comercioSave?.comerCod },
     });
 
     if (!comerXafiSave) {
       comerXafiSave = await this._comerciosXAfiliado.save({
         cxaCodAfi: cxaCod,
-        cxaCodComer: comercioSave!.comerCod,
+        cxaCodComer: comercioSave?.comerCod,
       });
       console.log('listo comercioxafilido');
     } else {
@@ -157,8 +157,8 @@ export class CommerceService {
     }
 
     //Crear Comision
-    let comisionSave = await this._comisionesMilPagos.findOne({
-      where: { cmCodComercio: comercioSave!.comerCod },
+    const comisionSave = await this._comisionesMilPagos.findOne({
+      where: { cmCodComercio: comercioSave?.comerCod },
     });
 
     console.log('existe comision', comisionSave);
