@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { TerminalsService } from './terminals.service';
 import { TerminalsController } from './terminals.controller';
 import { CommerceModule } from 'src/commerce/commerce.module';
