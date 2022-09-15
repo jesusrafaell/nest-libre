@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import Usuarios from '../db/models/usuarios.entity';
 import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { exec } from 'child_process';

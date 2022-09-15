@@ -1,5 +1,5 @@
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { Connection, getConnection, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CommerceDto } from './dto/new-commerce.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
@@ -18,8 +18,7 @@ export interface Resp {
 @Injectable()
 export class CommerceService {
   constructor(
-    @InjectConnection()
-    private readonly connection: Connection,
+    private dataSource: DataSource,
     //
     @InjectRepository(Comercios)
     private readonly _commerceRepository: Repository<Comercios>,
@@ -165,7 +164,7 @@ export class CommerceService {
     console.log('existe comision', comisionSave);
 
     if (!comisionSave) {
-      this.connection.query(`
+      this.dataSource.query(`
 						INSERT INTO [dbo].[ComisionesMilPagos]
 							([cmCodComercio] ,[cmPorcentaje])
 						VALUES (${comercioSave?.comerCod} ,0)				

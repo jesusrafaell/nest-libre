@@ -19,16 +19,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
-    "migration:create": "yarn typeorm migration:generate -- -n",
-    "migration:run": "yarn typeorm migration:run",
-    "migration:revert": "yarn typeorm migration:revert",
-    "migration:show": "yarn typeorm migration:show",
-    "migration:preData": "ts-node src/db/contents/index.ts"
+    "migrate:create": "npx typeorm-ts-node-esm migration:generate ./src/db/migrations/Migratrion -d ./src/db/config/data-source.ts",
+    "migrate:run": "ts-node --transpile-only ./node_nodules/typeorm/cli.js migration:run -d ./src/db/config/data-source.ts",
+    "migrate:revert": "ts-node --transpile-only ./node_nodules/typeorm/cli.js migration:revert -d ./src/db/config/data-source.ts",
+    "migrate:preData": "ts-node src/db/contents/index.ts",
+    "migrate:show": "npx typeorm-ts-node-esm migration:show -d ./src/db/config/migracion.ts"
   },
   "dependencies": {
     "@nestjs/class-validator": "^0.13.4",
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",

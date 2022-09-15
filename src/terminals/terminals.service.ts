@@ -1,22 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CommerceService } from 'src/commerce/commerce.service';
 import 'dotenv/config';
-import { InjectConnection } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
-import { AbonoService } from 'src/abono/abono.service';
+import { AbonoService, RespAbono } from 'src/abono/abono.service';
 import formatTerminals from 'src/utils/formatTerminals';
+import { DataSource } from 'typeorm';
 
 export interface RespTerm {
   message: string;
   terminales?: string[];
+  terminales_Error?: string[];
   code?: number;
 }
 
 @Injectable()
 export class TerminalsService {
   constructor(
-    @InjectConnection()
-    private readonly connection: Connection,
+    private dataSource: DataSource,
     private commerceService: CommerceService,
     private abonoService: AbonoService,
   ) {}
@@ -45,7 +48,7 @@ export class TerminalsService {
 
     console.log('Afiliado', Number(afiliado.cxaCodAfi));
 
-    const responseSP = await this.connection.query(
+    const responseSP = await this.dataSource.query(
       `EXEC SP_new_terminal 
 			@Cant_Term = ${comerCantPost},
 			@Afiliado = '${Number(afiliado.cxaCodAfi)}',
@@ -66,33 +69,41 @@ export class TerminalsService {
 
     console.log('Res Exec', responseSP);
     if (!responseSP || !responseSP.length) {
-      info.message =
-        'Vuelva a intentar esta accion en 10 minutos, estamos creando terminales';
-      return info;
+      throw new NotFoundException(
+        'Vuelva a intentar esta accion en 10 minutos, estamos creando terminales',
+      );
     } else {
       const nroTerminals = formatTerminals(responseSP);
       console.log('termianles', nroTerminals);
       //
-      const abono = await this.abonoService.createAbono(
+      const abono: RespAbono = await this.abonoService.createAbono(
         nroTerminals,
         commerce,
         afiliado.cxaCodAfi,
       );
-      if (!abono) {
+      if (!abono || abono.code === 4000) {
         throw new BadRequestException({
-          message: `Error al crear los abonos de los terminales`,
+          message: `Error al crear abono a los terminales, por favor contactar a Tranred`,
           terminales: nroTerminals,
         });
       }
 
       if (responseSP.length < comerCantPost) {
-        info.message = `Terminales creadas: ${nroTerminals.length}, para crear mas espere 10 minutos`;
-        info.terminales = nroTerminals;
-        info.code = 202;
+        info.message =
+          abono.message +
+          (abono.terminales.length > 0 &&
+            `, solo temiamos disponibles ${responseSP.length} espere 10 minutos`);
+        info.code = 203;
+        info.terminales = abono.terminales;
+        //info.terminales_Error = abono.terminales_Error;
         return info;
       } else {
-        (info.message = 'Terminales creadas'), (info.terminales = nroTerminals);
-        return info;
+        if (abono.terminales.length > 0) {
+          return abono;
+        }
+        throw new BadRequestException({
+          message: abono.message,
+        });
       }
     }
   }

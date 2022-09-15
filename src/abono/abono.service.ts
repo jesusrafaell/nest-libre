@@ -1,13 +1,14 @@
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import Comercios from 'src/db/models/comercios.entity';
 import Abonos from 'src/db/models/abono.entity';
+import Comercios from 'src/db/models/comercios.entity';
 
 export interface RespAbono {
   message: string;
   terminales?: string[];
   terminales_Error?: string[];
+  code?: number;
 }
 
 @Injectable()
@@ -35,10 +36,10 @@ export class AbonoService {
         .where('abonos.aboTerminal IN (:...terminals)', { terminals })
         .getMany();
 
-      const newTerminals: string[] = terminals.map((term: string) => {
-        if (exist_termianls.filter((terminal) => terminal.aboTerminal === term))
-          return term;
-      });
+      const newTerminals: string[] = terminals.filter(
+        (term: string) =>
+          !exist_termianls.find((terminal) => terminal.aboTerminal === term),
+      );
 
       const abono: Abonos[] = newTerminals.map((terminal: string) => ({
         aboTerminal: terminal,
@@ -50,33 +51,44 @@ export class AbonoService {
         estatusId: 23,
       }));
 
-      /*
-      const newTerminals = await this._abonoRepository
-        .createQueryBuilder('abonos')
-        .select('abonos.aboTerminal')
-        .where('abonos.aboTerminal NOT IN (:...terminals)', { terminals })
-        .getMany();
-        */
-
       console.log('nuevos', newTerminals);
       console.log('existe', exist_termianls);
 
-      //const abonosSaves = await this._abonoRepository.save(abono);
-      //console.log('creado el abono', abonosSaves);
+      const abonosSaves = await this._abonoRepository.save(abono);
+
       const info: RespAbono = {
         message: '',
       };
-      info.message = `Se crearon ${newTerminals.length} terminales, y se rechazaron ${exist_termianls} terminales`;
+
+      if (exist_termianls.length) {
+        //   info.terminales_Error = exist_termianls.map((term) => term.aboTerminal);
+        info.code = 202;
+      }
+
+      //console.log('creado el abono', abonosSaves);
+      info.message = `Terminales creados: ${abonosSaves.length}, terminales rechazados: ${exist_termianls.length}`;
       if (newTerminals.length) info.terminales = newTerminals;
-      if (exist_termianls.length)
-        info.terminales_Error = exist_termianls.map((term) => term.aboTerminal);
       return info;
     } catch (e) {
       console.log('Abono error:', e);
       return {
         message: `Error al crear abono a los terminales, por favor contactar a Tranred`,
-        terminales: terminals,
+        code: 400,
       };
     }
   }
 }
+
+/*
+Resp
+{
+    "message": "Se crearon 1 terminales, y se rechazaron 1 terminales",
+    "terminales_Error": [
+        "48080012"
+    ],
+    "code": 202,
+    "terminales": [
+        "48080013"
+    ]
+}
+*/
