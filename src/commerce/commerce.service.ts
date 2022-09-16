@@ -1,7 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CommerceDto } from './dto/new-commerce.dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { daysToString, locationToString } from 'src/utils/formatString';
 import Comercios from 'src/db/models/comercios.entity';
@@ -59,6 +63,10 @@ export class CommerceService {
 
   async createCommerce(body: CommerceDto): Promise<Resp> {
     const { commerce, contacto } = body;
+
+    throw new NotFoundException(
+      'Vuelva a intentar esta accion en 10 minutos, estamos creando terminales',
+    );
 
     //validar si el comercio existe
     if (await this.getCommerce(commerce.comerRif)) {

@@ -8,6 +8,7 @@ import ComisionesMilPagos from 'src/db/models/comisionesmilpagos.entity';
 import ComerciosXafiliado from 'src/db/models/comerciosXafliado.entity';
 import Afiliados from 'src/db/models/afiliados.entity';
 import CategoriasXafiliado from 'src/db/models/categoriasXafiliado.entity';
+import AfiliadosLibrePago from 'src/db/models/afiliados_librepago.entity';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import CategoriasXafiliado from 'src/db/models/categoriasXafiliado.entity';
       ComerciosXafiliado,
       CategoriasXafiliado,
       Afiliados,
+      AfiliadosLibrePago,
     ]),
   ],
   controllers: [CommerceController],

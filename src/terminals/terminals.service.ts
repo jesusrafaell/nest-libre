@@ -81,7 +81,7 @@ export class TerminalsService {
         commerce,
         afiliado.cxaCodAfi,
       );
-      if (!abono || abono.code === 4000) {
+      if (!abono || abono.code === 400) {
         throw new BadRequestException({
           message: `Error al crear abono a los terminales, por favor contactar a Tranred`,
           terminales: nroTerminals,
