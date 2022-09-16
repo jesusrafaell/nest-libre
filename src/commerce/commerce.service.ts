@@ -10,6 +10,7 @@ import ComerciosXafiliado from 'src/db/models/comerciosXafliado.entity';
 import ComisionesMilPagos from 'src/db/models/comisionesmilpagos.entity';
 import CategoriasXafiliado from 'src/db/models/categoriasXafiliado.entity';
 import Afiliados from 'src/db/models/afiliados.entity';
+import AfiliadosLibrePago from 'src/db/models/afiliados_librepago.entity';
 
 export interface Resp {
   message?: string;
@@ -37,6 +38,9 @@ export class CommerceService {
     //
     @InjectRepository(Afiliados)
     private readonly _afiliadosRepository: Repository<Afiliados>,
+    //
+    @InjectRepository(AfiliadosLibrePago)
+    private readonly _afiliadosLibrepagoRepository: Repository<AfiliadosLibrePago>,
   ) {}
 
   async getCategoriaByAfiliado(
@@ -63,26 +67,24 @@ export class CommerceService {
       );
     }
 
-    //Validar si el afiliado existe y es de librepago
-    // const cxaCodAfi = `${commerce.idActivityXAfiliado}`.split('');
-    // while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');
-    // const cxaCod: string = cxaCodAfi.join('');
     const { idActivityXAfiliado: cxaCod } = commerce;
     console.log('numero de afiliado', cxaCod);
 
     //[3312] MOdifcar el afilaido apra que busque en mi tabla
-    const afiliado = await this._afiliadosRepository.findOneById(cxaCod);
+    const afiliado = await this._afiliadosLibrepagoRepository.findOne({
+      where: { afiliado: cxaCod },
+    });
 
     if (!afiliado)
       throw new BadRequestException(
         `No existe el numero de afiliado [${cxaCod}]`,
       );
 
-    const categoria = await this.getCategoriaByAfiliado(afiliado.afiCod);
+    const categoria = await this.getCategoriaByAfiliado(afiliado.afiliado);
 
     if (!categoria)
       throw new BadRequestException(
-        `No existe categoria comercial del afiliado [${afiliado.afiCod}]`,
+        `No existe categoria comercial del afiliado [${afiliado.afiliado}]`,
       );
 
     const newCommerce: Comercios = {

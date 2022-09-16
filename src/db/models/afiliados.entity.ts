@@ -1,22 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 
 @Entity({ synchronize: false })
 export default class Afiliados {
-	@PrimaryGeneratedColumn()
-	afiCod?: string;
+  @PrimaryColumn({ type: 'varchar', length: 15 })
+  afiCod?: string;
 
-	@Column()
-	afiDesc!: string;
+  @Column()
+  afiDesc!: string;
 
-	@Column()
-	afiCodTipoPer!: number;
+  @Column()
+  afiCodTipoPer!: number;
 
-	@Column()
-	afiFreg!: string;
+  @Column()
+  afiFreg!: string;
 
-	@Column()
-	afiCodBan!: string;
+  @Column()
+  afiCodBan!: string;
 
-	@Column()
-	afiNroCuenta!: string;
+  @Column()
+  afiNroCuenta!: string;
 }
