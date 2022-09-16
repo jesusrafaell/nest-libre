@@ -74,17 +74,3 @@ export class AbonoService {
     }
   }
 }
-
-/*
-Resp
-{
-    "message": "Se crearon 1 terminales, y se rechazaron 1 terminales",
-    "terminales_Error": [
-        "48080012"
-    ],
-    "code": 202,
-    "terminales": [
-        "48080013"
-    ]
-}
-*/
