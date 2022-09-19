@@ -3,7 +3,7 @@ import Usuarios from '../db/models/usuarios.entity';
 import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { exec } from 'child_process';
 import { JwtService } from '@nestjs/jwt';
-import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { UsuariosService } from '../usuarios/usuarios.service';
 
 @Injectable()
 export class AuthService {

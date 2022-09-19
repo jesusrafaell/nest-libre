@@ -2,8 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginUsuarioDto } from './dto/login-usuario.dto';
 import { Injectable } from '@nestjs/common';
-import Perfiles from 'src/db/models/perfiles.entity';
-import Usuarios from 'src/db/models/usuarios.entity';
+import Perfiles from '../db/models/perfiles.entity';
+import Usuarios from '../db/models/usuarios.entity';
 import 'dotenv/config';
 
 @Injectable()

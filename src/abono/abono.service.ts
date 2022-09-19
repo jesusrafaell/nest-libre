@@ -1,8 +1,8 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import Abonos from 'src/db/models/abono.entity';
-import Comercios from 'src/db/models/comercios.entity';
+import Abonos from '../db/models/abono.entity';
+import Comercios from '../db/models/comercios.entity';
 
 export interface RespAbono {
   message: string;

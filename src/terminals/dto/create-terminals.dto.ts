@@ -5,8 +5,8 @@ import {
   Length,
   Validate,
 } from '@nestjs/class-validator';
-import { RifValidation } from 'src/commerce/dto/new-commerce.dto';
-import error from 'src/commerce/dto/messages-validator';
+import { RifValidation } from '../../commerce/dto/new-commerce.dto';
+import error from '../../commerce/dto/messages-validator';
 
 export class CreateTerminalsDto {
   @IsString()

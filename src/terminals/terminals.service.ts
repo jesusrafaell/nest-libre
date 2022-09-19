@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CommerceService } from 'src/commerce/commerce.service';
+import { CommerceService } from '../commerce/commerce.service';
 import 'dotenv/config';
-import { AbonoService, RespAbono } from 'src/abono/abono.service';
-import formatTerminals from 'src/utils/formatTerminals';
+import { AbonoService, RespAbono } from '../abono/abono.service';
+import formatTerminals from '../utils/formatTerminals';
 import { DataSource } from 'typeorm';
 
 export interface RespTerm {
