@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TerminalsService } from './terminals.service';
 import { TerminalsController } from './terminals.controller';
-import { AbonoModule } from 'src/abono/abono.module';
-import { CommerceModule } from 'src/commerce/commerce.module';
+import { AbonoModule } from '../abono/abono.module';
+import { CommerceModule } from '../commerce/commerce.module';
 
 @Module({
   imports: [CommerceModule, AbonoModule],

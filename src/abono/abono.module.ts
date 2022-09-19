@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Abonos from 'src/db/models/abono.entity';
+import Abonos from '../db/models/abono.entity';
 import { AbonoService } from './abono.service';
 
 @Module({

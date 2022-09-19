@@ -1,4 +1,4 @@
-import { LocationDTO } from 'src/commerce/dto/new-commerce.dto';
+import { LocationDTO } from '../commerce/dto/new-commerce.dto';
 
 export const daysToString = (value: any) => {
   let text: string = '';

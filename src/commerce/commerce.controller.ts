@@ -6,7 +6,7 @@ import {
   UseGuards,
   Post,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CommerceDto } from './dto/new-commerce.dto';
 import { CommerceService, Resp } from './commerce.service';
 

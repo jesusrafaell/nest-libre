@@ -7,14 +7,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { daysToString, locationToString } from 'src/utils/formatString';
-import Comercios from 'src/db/models/comercios.entity';
-import Contactos from 'src/db/models/contactos.entity';
-import ComerciosXafiliado from 'src/db/models/comerciosXafliado.entity';
-import ComisionesMilPagos from 'src/db/models/comisionesmilpagos.entity';
-import CategoriasXafiliado from 'src/db/models/categoriasXafiliado.entity';
-import Afiliados from 'src/db/models/afiliados.entity';
-import AfiliadosLibrePago from 'src/db/models/afiliados_librepago.entity';
+import { daysToString, locationToString } from '../utils/formatString';
+import Comercios from '../db/models/comercios.entity';
+import Contactos from '../db/models/contactos.entity';
+import ComerciosXafiliado from '../db/models/comerciosXafliado.entity';
+import ComisionesMilPagos from '../db/models/comisionesmilpagos.entity';
+import CategoriasXafiliado from '../db/models/categoriasXafiliado.entity';
+import Afiliados from '../db/models/afiliados.entity';
+import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
 
 export interface Resp {
   message?: string;

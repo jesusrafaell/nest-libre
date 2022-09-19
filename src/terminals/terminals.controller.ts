@@ -6,7 +6,7 @@ import {
   UseGuards,
   Post,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateTerminalsDto } from './dto/create-terminals.dto';
 import { RespTerm, TerminalsService } from './terminals.service';
 
