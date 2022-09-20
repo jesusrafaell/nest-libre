@@ -8,6 +8,8 @@ import 'dotenv/config';
 import { AbonoService, RespAbono } from '../abono/abono.service';
 import formatTerminals from '../utils/formatTerminals';
 import { DataSource } from 'typeorm';
+import { LogHeader } from '../logs/dto/dto-logs.dto';
+import { LogsService } from '../logs/logs.service';
 
 export interface RespTerm {
   message: string;
@@ -20,6 +22,7 @@ export interface RespTerm {
 export class TerminalsService {
   constructor(
     private dataSource: DataSource,
+    private logService: LogsService,
     private commerceService: CommerceService,
     private abonoService: AbonoService,
   ) {}
@@ -27,6 +30,7 @@ export class TerminalsService {
   async createTerminals(
     comerRif: string,
     comerCantPost: number,
+    log: LogHeader,
   ): Promise<RespTerm> {
     console.log(comerRif, comerCantPost);
     //validar si exsite el comercio
@@ -92,13 +96,19 @@ export class TerminalsService {
         info.message =
           abono.message +
           (abono.terminales.length > 0 &&
-            `, solo temiamos disponibles ${responseSP.length} espere 10 minutos`);
+            `, solo teniamos disponibles ${responseSP.length} espere 10 minutos`);
         info.code = 203;
         info.terminales = abono.terminales;
-        //info.terminales_Error = abono.terminales_Error;
+
+        //
+        log.msg = info.message;
+        await this.logService.saveLogsToken(log);
+
         return info;
       } else {
         if (abono.terminales.length > 0) {
+          log.msg = abono.message;
+          await this.logService.saveLogsToken(log);
           return abono;
         }
         throw new BadRequestException({

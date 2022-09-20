@@ -57,7 +57,7 @@ export class AbonoService {
       };
 
       if (exist_termianls.length) {
-        //   info.terminales_Error = exist_termianls.map((term) => term.aboTerminal);
+        //info.terminales_Error = exist_termianls.map((term) => term.aboTerminal);
         info.code = 202;
       }
 

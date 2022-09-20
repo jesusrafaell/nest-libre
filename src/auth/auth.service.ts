@@ -4,12 +4,15 @@ import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
 import { exec } from 'child_process';
 import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../usuarios/usuarios.service';
+import { LogsService } from '../logs/logs.service';
+import { Log } from '../logs/dto/dto-logs.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsuariosService,
     private readonly jwtService: JwtService, //private usersService: UsersService,
+    private readonly logService: LogsService,
   ) {}
 
   execCommand(password: string) {
@@ -49,6 +52,15 @@ export class AuthService {
         'Este Usuario no tiene el perfil para usar la API',
       );
     }
+
+    const log: Log = {
+      id: usuario.id,
+      method: 'POST',
+      path: '/auth/login',
+      msg: `Login de Usuario: ${usuario.email}`,
+    };
+
+    await this.logService.saveLogs(log);
 
     return this.jwtLogin(usuario.email, usuario.id);
   }

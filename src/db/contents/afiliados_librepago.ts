@@ -2,7 +2,6 @@ import { DataSource } from 'typeorm';
 import AfiliadosLibrePago from '../models/afiliados_librepago.entity';
 
 const data: AfiliadosLibrePago[] = [
-  { afiliado: '000000720008179' },
   { afiliado: '000000722000030' },
   { afiliado: '000000722000031' },
   { afiliado: '000000722000032' },
