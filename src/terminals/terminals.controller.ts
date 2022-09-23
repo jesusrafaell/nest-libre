@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { LogHeader } from '../logs/dto/dto-logs.dto';
 import { CreateTerminalsDto } from './dto/create-terminals.dto';
 import { RespTerm, TerminalsService } from './terminals.service';
