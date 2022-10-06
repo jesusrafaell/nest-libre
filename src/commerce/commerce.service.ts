@@ -1,11 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CommerceDto } from './dto/new-commerce.dto';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { daysToString, locationToString } from '../utils/formatString';
 import Comercios from '../db/models/comercios.entity';
@@ -15,6 +11,8 @@ import ComisionesMilPagos from '../db/models/comisionesmilpagos.entity';
 import CategoriasXafiliado from '../db/models/categoriasXafiliado.entity';
 import Afiliados from '../db/models/afiliados.entity';
 import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
+import { LogHeader } from '../logs/dto/dto-logs.dto';
+import { LogsService } from '../logs/logs.service';
 
 export interface Resp {
   message?: string;
@@ -24,6 +22,7 @@ export interface Resp {
 export class CommerceService {
   constructor(
     private dataSource: DataSource,
+    private logService: LogsService,
     //
     @InjectRepository(Comercios)
     private readonly _commerceRepository: Repository<Comercios>,
@@ -40,11 +39,11 @@ export class CommerceService {
     @InjectRepository(CategoriasXafiliado)
     private readonly _categoriasXafiliado: Repository<CategoriasXafiliado>,
     //
-    @InjectRepository(Afiliados)
-    private readonly _afiliadosRepository: Repository<Afiliados>,
-    //
     @InjectRepository(AfiliadosLibrePago)
     private readonly _afiliadosLibrepagoRepository: Repository<AfiliadosLibrePago>,
+    //
+    @InjectRepository(Afiliados)
+    private readonly _afiliadosRepository: Repository<Afiliados>,
   ) {}
 
   async getCategoriaByAfiliado(
@@ -61,12 +60,8 @@ export class CommerceService {
     });
   }
 
-  async createCommerce(body: CommerceDto): Promise<Resp> {
+  async createCommerce(body: CommerceDto, log: LogHeader): Promise<Resp> {
     const { commerce, contacto } = body;
-
-    throw new NotFoundException(
-      'Vuelva a intentar esta accion en 10 minutos, estamos creando terminales',
-    );
 
     //validar si el comercio existe
     if (await this.getCommerce(commerce.comerRif)) {
@@ -79,13 +74,24 @@ export class CommerceService {
     console.log('numero de afiliado', cxaCod);
 
     //[3312] MOdifcar el afilaido apra que busque en mi tabla
+    console.log('bu1', cxaCod);
+
+    const afiliadoGeneral = await this._afiliadosRepository.findOne({
+      where: { afiCod: cxaCod },
+    });
+
+    if (!afiliadoGeneral)
+      throw new BadRequestException(
+        `No existe el numero de afiliado [${cxaCod}]`,
+      );
+
     const afiliado = await this._afiliadosLibrepagoRepository.findOne({
       where: { afiliado: cxaCod },
     });
 
     if (!afiliado)
       throw new BadRequestException(
-        `No existe el numero de afiliado [${cxaCod}]`,
+        `El numero de afiliado [${cxaCod}], no esta disponible`,
       );
 
     const categoria = await this.getCategoriaByAfiliado(afiliado.afiliado);
@@ -186,6 +192,9 @@ export class CommerceService {
     const info = {
       message: `Comerico [${commerce.comerRif}] creado con exito`,
     };
+
+    log.msg = info.message;
+    await this.logService.saveLogsToken(log);
 
     return info;
   }

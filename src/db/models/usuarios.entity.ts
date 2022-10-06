@@ -2,10 +2,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
+  JoinColumn,
   //OneToMany,
   //JoinColumn,
 } from 'typeorm';
-//import general_logs from './general_logs';
+import general_logs_librepago from './general_logs_librepago.entity';
 
 @Entity({ synchronize: false })
 export default class Usuarios {
@@ -45,12 +47,10 @@ export default class Usuarios {
   @Column({ nullable: false })
   estatus!: number;
 
-  /*
   @OneToMany(
-    () => general_logs,
+    () => general_logs_librepago,
     (general_logs) => general_logs.id_user,
   )
   @JoinColumn({ name: 'general_logs' })
-  general_logs?: general_logs[];
-  */
+  general_logs?: general_logs_librepago[];
 }

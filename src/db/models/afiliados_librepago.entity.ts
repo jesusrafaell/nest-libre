@@ -12,7 +12,6 @@ export default class AfiliadosLibrePago {
   @PrimaryGeneratedColumn()
   id?: string;
 
-  @OneToOne(() => Afiliados)
-  @JoinColumn({ name: 'afiliado' })
+  @Column({ unique: true })
   afiliado: string;
 }

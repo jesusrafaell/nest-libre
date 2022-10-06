@@ -9,6 +9,7 @@ import ComerciosXafiliado from '../db/models/comerciosXafliado.entity';
 import Afiliados from '../db/models/afiliados.entity';
 import CategoriasXafiliado from '../db/models/categoriasXafiliado.entity';
 import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
+import { LogsModule } from '../logs/logs.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
       Afiliados,
       AfiliadosLibrePago,
     ]),
+    LogsModule,
   ],
   controllers: [CommerceController],
   providers: [CommerceService],
