@@ -1,17 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import Usuarios from '../db/models/usuarios.entity';
-import { LoginUsuarioDto, Token } from './dto/login-usuario.dto';
+import Usuarios from '../../db/models/usuarios.entity';
+import { LoginUsuarioDto, Token } from '../dto/login-usuario.dto';
 import { exec } from 'child_process';
 import { JwtService } from '@nestjs/jwt';
-import { UsuariosService } from '../usuarios/usuarios.service';
-import { LogsService } from '../logs/logs.service';
-import { Log } from '../logs/dto/dto-logs.dto';
+import { UsuariosService } from '../../usuarios/services/usuarios.service';
+import { LogsService } from '../../logs/logs.service';
+import { Log } from '../../logs/dto/dto-logs.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsuariosService,
-    private readonly jwtService: JwtService, //private usersService: UsersService,
+    private readonly jwtService: JwtService,
     private readonly logService: LogsService,
   ) {}
 

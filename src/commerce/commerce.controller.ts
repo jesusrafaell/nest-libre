@@ -8,7 +8,7 @@ import {
   Headers,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { CommerceDto } from './dto/new-commerce.dto';
 import { CommerceService, Resp } from './commerce.service';
 import { Request } from 'express';
