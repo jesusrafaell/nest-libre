@@ -118,15 +118,15 @@ class CommerceData {
   @IsNotEmpty(error.textNotEmpty)
   @Validate(SizeOneOrTwo)
   comerTipoPer: number;
-  @Length(4, 4, error.cuentaBanco)
-  comerCodigoBanco: string;
+  // @Length(4, 4, error.cuentaBanco)
+  // comerCodigoBanco: string;
   @Length(20, 20, error.cuentaBanco)
   comerCuentaBanco: string;
   @IsNumber()
   @Validate(SizeOneOrTwo)
   comerCodTipoCont: number;
   comerObservaciones?: string;
-  comerPuntoAdicional?: number;
+  //comerPuntoAdicional?: number;
   //
   @IsString()
   @Length(4, 4, error.cuentaBanco)

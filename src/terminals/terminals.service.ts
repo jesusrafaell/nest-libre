@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
+  BadRequestException, // 400
   Injectable,
-  NotFoundException,
+  NotFoundException, //404
 } from '@nestjs/common';
 import { CommerceService } from '../commerce/commerce.service';
 import 'dotenv/config';
