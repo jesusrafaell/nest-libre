@@ -30,8 +30,8 @@ deploy_qa:
   script: 
     
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo git checkout qa && sudo git pull "
-    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn  && sudo yarn build "
-     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn build "
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn "
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn build "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT && sudo  sudo pm2  restart api-librepago "
   only: 
     - qa 
