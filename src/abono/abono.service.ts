@@ -62,7 +62,7 @@ export class AbonoService {
       }
 
       //console.log('creado el abono', abonosSaves);
-      info.message = `Terminales creados: ${abonosSaves.length}, terminales rechazados: ${exist_termianls.length}`;
+      info.message = `[${commerce.comerRif}] Terminales creados: ${abonosSaves.length}, terminales rechazados: ${exist_termianls.length}`;
       if (newTerminals.length) info.terminales = newTerminals;
       return info;
     } catch (e) {

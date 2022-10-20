@@ -13,6 +13,7 @@ import Afiliados from '../db/models/afiliados.entity';
 import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
 import { LogHeader } from '../logs/dto/dto-logs.dto';
 import { LogsService } from '../logs/logs.service';
+import Bancos from '../db/models/bancos.entity';
 
 export interface Resp {
   message?: string;
@@ -44,6 +45,9 @@ export class CommerceService {
     //
     @InjectRepository(Afiliados)
     private readonly _afiliadosRepository: Repository<Afiliados>,
+
+    @InjectRepository(Bancos)
+    private readonly _bancosRepository: Repository<Bancos>,
   ) {}
 
   async getCategoriaByAfiliado(
@@ -100,11 +104,21 @@ export class CommerceService {
       throw new BadRequestException(
         `No existe categoria comercial del afiliado [${afiliado.afiliado}]`,
       );
+    const aboCodBanco = commerce.comerCuentaBanco.slice(0, 4);
+
+    const validBank = await this._bancosRepository.findOne({
+      where: { banCodBan: aboCodBanco },
+    });
+
+    if (!validBank) {
+      console.log(`Code Bank invalid [${aboCodBanco}]`);
+      throw new BadRequestException(`Code Bank invalid [${aboCodBanco}]`);
+    }
 
     const newCommerce: Comercios = {
       comerDesc: commerce.comerDesc,
       comerTipoPer: commerce.comerTipoPer,
-      comerCodigoBanco: commerce.comerCodigoBanco,
+      comerCodigoBanco: aboCodBanco,
       comerCuentaBanco: commerce.comerCuentaBanco,
       comerPagaIva: 'SI',
       comerCodUsuario: null,
@@ -128,7 +142,7 @@ export class CommerceService {
       comerEstatus: 5,
       comerHorario: null,
       comerImagen: null,
-      comerPuntoAdicional: commerce.comerPuntoAdicional || 0,
+      comerPuntoAdicional: 0,
       comerCodigoBanco2: commerce.comerCodigoBanco2 || '',
       comerCuentaBanco2: commerce.comerCuentaBanco2 || '',
       comerCodigoBanco3: commerce.comerCodigoBanco3 || '',
