@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   UsePipes,
@@ -13,10 +12,10 @@ import { AuthService } from '../services/auth.service';
 @Controller()
 //@Controller('auth')
 export class AuthController {
-  constructor(private readonly UsuariosService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('auth/login')
   login(@Body() login: LoginUsuarioDto): Promise<Token> {
-    return this.UsuariosService.login(login);
+    return this.authService.login(login);
   }
 }
