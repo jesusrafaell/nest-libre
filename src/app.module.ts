@@ -13,7 +13,7 @@ import { TestApiModule } from './testAPI/testAPi.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (Config: ConfigService) => ({
+      useFactory: () => ({
         type: 'mssql',
         host: process.env.DB_HOST,
         database: process.env.DB_DATA,
@@ -27,6 +27,7 @@ import { TestApiModule } from './testAPI/testAPi.module';
         extra: {
           trustServerCertificate: true,
         },
+        //entities: [__dirname + '/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
       }),
     }),
