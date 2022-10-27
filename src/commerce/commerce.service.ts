@@ -10,7 +10,7 @@ import ComerciosXafiliado from '../db/models/comerciosXafliado.entity';
 import ComisionesMilPagos from '../db/models/comisionesmilpagos.entity';
 import CategoriasXafiliado from '../db/models/categoriasXafiliado.entity';
 import Afiliados from '../db/models/afiliados.entity';
-import AfiliadosLibrePago from '../db/models/afiliados_librepago.entity';
+import AfiliadosLibrePago from '../db/models/afiliados_api.entity';
 import { LogHeader } from '../logs/dto/dto-logs.dto';
 import { LogsService } from '../logs/logs.service';
 import Bancos from '../db/models/bancos.entity';

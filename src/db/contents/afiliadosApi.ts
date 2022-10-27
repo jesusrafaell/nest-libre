@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import AfiliadosLibrePago from '../models/afiliados_librepago.entity';
+import AfiliadosApi from '../models/afiliados_api.entity';
 
-const data: AfiliadosLibrePago[] = [
+const data: AfiliadosApi[] = [
   { afiliado: '000000722000030' },
   { afiliado: '000000722000031' },
   { afiliado: '000000722000032' },
@@ -14,8 +14,7 @@ const data: AfiliadosLibrePago[] = [
   { afiliado: '000000722000039' },
 ];
 export default async function (appDataSource: DataSource) {
-  const valid = await appDataSource.getRepository(AfiliadosLibrePago).find();
-  if (!valid.length)
-    await appDataSource.getRepository(AfiliadosLibrePago).save(data);
+  const valid = await appDataSource.getRepository(AfiliadosApi).find();
+  if (!valid.length) await appDataSource.getRepository(AfiliadosApi).save(data);
   console.log('listo afiliados');
 }

@@ -10,7 +10,7 @@ import {
 import origin_logs_librepago from './origin_logs_librepago.entity';
 import Usuarios from './usuarios.entity';
 
-@Entity({ synchronize: true })
+@Entity({ synchronize: false })
 export default class general_logs_librepago {
   @PrimaryGeneratedColumn()
   id?: number;
