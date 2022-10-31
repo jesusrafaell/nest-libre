@@ -39,7 +39,7 @@ deploy_produccion:
   stage: deploy
   script: 
      
-    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEPRO " cd $DOCUMENT_ROOT/ && sudo git checkout master && sudo git pull "
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEPRO " cd $DOCUMENT_ROOT/ && sudo git checkout main && sudo git pull "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEPRO " cd $DOCUMENT_ROOT/ && sudo yarn "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEPRO " cd $DOCUMENT_ROOT/ && sudo yarn build "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEPRO " cd $DOCUMENT_ROOT && sudo pm2 restart restart restart api-librepago"
