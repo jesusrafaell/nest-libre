@@ -26,11 +26,11 @@ export class UsuariosService {
       where: { id: user.perfilId },
     });
 
-    if (!perfil) return false;
+    if (!perfil) return true;
 
     if (
-      user.perfilId !== Number(process.env.PERFIL_ACCESS) &&
-      perfil.nombre !== 'api'
+      //user.perfilId !== Number(process.env.PERFIL_ACCESS) &&
+      perfil.nombre !== 'API'
     ) {
       return true;
     }
